@@ -1,0 +1,24 @@
+{
+    "python.pythonPath": "/Library/Frameworks/Python.framework/Versions/3.7/bin/python3",
+
+    "python.linting.pylintPath": "pylint",
+    "python.linting.pylintArgs": [
+        "--load-plugins", "pylint_django"
+    ],
+    "python.formatting.autopep8Path": "autopep8",
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        "./utils",
+        "-p",
+        "test*.py"
+    ],
+    "python.testing.pyTestEnabled": false,
+    "python.testing.nosetestsEnabled": false,
+    "python.testing.unittestEnabled": true,
+    "python.autoComplete.extraPaths": [
+        "/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages",
+        "/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/",
+        "/Users/qyp/PycharmProjects/",
+    ],
+}

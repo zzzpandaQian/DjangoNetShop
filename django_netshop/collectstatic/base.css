@@ -1,0 +1,8 @@
+#page{
+    font-size:15px;
+    margin-left: 50%;
+    position:absolute;
+    bottom:100px;
+    transform: translateX(-50%);
+
+}

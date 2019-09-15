@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% block title %}
+登录页面
+{% endblock %}
+{% block headerjs %}
+{#<script type="text/javascript" src="/static/md5-min.js"></script>#}
+{% endblock %}
+{% block main %}
+    <div class="login-body">
+        <div class="login-card">
+            <div class="login-top">
+                <h3>新用户登录</h3>
+                <h5>尊敬的用户，欢迎您回来！</h5>
+            </div>
+            <div class="login-bottom">
+               <form method="post" action="http://127.0.0.1:8000/user/login/" onsubmit="return login();">
+                   {% csrf_token %}
+                   <input type="hidden" name="time" id="time">
+                    <div class="login-input-box">
+
+                    <input type="text" id="account" name="account" value="" autocomplete="off" class="login-admin active" placeholder="邮箱登录"
+                    onblur="checkname()">
+                    <span style="color:red;" id="aSpan"></span>
+
+                    <input type="text" id="password" onblur="checkpwd()" autocomplete='off' name="password" value="" class="login-password" >
+                    <span style="color:red;" id="pSpan"> </span><br>
+
+                    <input type="text" style="height:36px;width: 100px;" id="code" onblur="checkCode(this.value)"><img src="/user/loadcode/" onclick="changeCode(this)"><span style="color:red;" id="cSpan"></span>
+
+                    <input type="hidden" name="redirect" value={{ red }}>
+                    <input type="hidden" name="factorlist" value="{{ factorlist }}">
+
+                    <button class="login-btn" style="color: white;text-decoration: none;cursor: pointer">登录</button>
+                        <span>{{ result }}</span>
+                </div>
+               </form>
+                <div class="login-img">
+                    <img src="/static/login_05.png" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block footerjs %}
+    <script>
+        function isEmail(str){
+            var reg = /^[a-zA-Z0-9_-]{6,}@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+            return reg.test(str);
+        }
+
+
+            //获取输入框的值
+        function checkname() {
+            var account = $('#account').val();
+                        //简单校验
+            if(account.length<6||!isEmail(account)||!account){
+                $('#aSpan').text('邮箱长度不能小于六位且必须符合邮箱格式');
+                window.cflag = false
+            }
+            else{
+                $('#aSpan').text('');
+                window.cflag = true
+
+            }
+
+        }
+
+        function checkpwd() {
+            var password = $('#password').val();
+            if(password.length<6){
+                $('#pSpan').text('密码长度不能小于六位');
+                window.cflag = false
+            }
+            else{
+                window.cflag = true
+                $('#pSpan').text('');
+
+            }
+
+        }
+
+
+
+        var time = new Date().getTime();
+        $('#time').val(time)
+
+
+        {#var hex_pwd = hex_md5(password);#}
+
+        //var hex_pwd = hex_md5(password+time)
+        {#$('#password').val(hex_pwd);#}
+
+
+
+
+        //切换验证码
+        function changeCode(obj){
+            $(obj).attr('src','/user/loadcode/?r='+new Date().getTime())
+        }
+
+
+        function checkCode(txt){
+            window.cflag = false;
+            $.ajax({
+                url:'/user/checkcode/',
+                type:'get',
+                data:{'code':txt},
+                async:false,
+                success:function(result){
+                    var flag = result.checkFlag;
+                    if(!$('#code').val()){
+                        $('#cSpan').text('');
+                        window.cflag = false
+                    }
+                    else if(flag){
+                        window.cflag = true;
+                        $('#cSpan').text('√');
+                    }else{
+                        $('#cSpan').text('×');
+                        window.cflag = false;
+
+                    }
+                }
+            })
+
+            return window.cflag;
+
+        }
+        checkCode($('#code').val())
+
+        function login() {
+            return window.cflag
+        }
+    </script>
+{% endblock %}
